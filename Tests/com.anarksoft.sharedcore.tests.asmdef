@@ -1,0 +1,24 @@
+{
+  "name": "com.anarksoft.sharedcore.tests",
+  "rootNamespace": "Anarksoft.SharedCore.Tests",
+  "references": [
+    "GUID:10c85dd9e3b44b89bd24db7f2c416e79",
+    "GUID:27619889b8ba2c74982f3775f0a28c43",
+    "GUID:0acc523941302664db1f4e527237feb3"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": true,
+  "precompiledReferences": [
+    "nunit.framework.dll"
+  ],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

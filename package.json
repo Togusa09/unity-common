@@ -1,0 +1,20 @@
+{
+  "name": "com.anarks2.unity-common",
+  "version": "0.0.1",
+  "displayName": "Common unity code",
+  "description": "Place to put common unity code for my projects",
+  "unity": "6000.5",
+  "documentationUrl": "https://example.com/",
+  "changelogUrl": "https://example.com/changelog.html",
+  "licensesUrl": "https://example.com/licensing.html",
+  "dependencies": {
+ },
+ "keywords": [
+
+  ],
+  "author": {
+    "name": "Togusa09",
+    "email": "Togusa09@gmail.com",
+    "url": "https://github.com/Togusa09/"
+  }
+}

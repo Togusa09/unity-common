@@ -1,0 +1,18 @@
+{
+  "name": "com.anarksoft.sharedcore.editor",
+  "rootNamespace": "Anarksoft.SharedCore.Editor",
+  "references": [
+    "GUID:10c85dd9e3b44b89bd24db7f2c416e79"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
