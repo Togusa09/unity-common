@@ -1,7 +1,7 @@
 {
   "name": "com.anarks2.unity-common",
   "version": "0.0.1",
-  "displayName": "Common unity code",
+  "displayName": "Anarksoft Common Unity",
   "description": "Place to put common unity code for my projects",
   "unity": "6000.5",
   "documentationUrl": "https://example.com/",
