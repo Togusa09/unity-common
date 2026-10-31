@@ -25,8 +25,28 @@ namespace Anarksoft.SharedCore.UI
                 rootElement = uiDocument.rootVisualElement;
             }
             
-            // Start closed by default
             CloseInternal(instant: true);
+        }
+
+        protected virtual void OnEnable()
+        {
+            // Automatically register with the UIManager when the window becomes active in the scene
+            // (Assuming you have a Service Locator or a static instance accessor)
+            var uiManager = ServiceLocator.Get<UIToolkitUIManager>();
+            if (uiManager != null)
+            {
+                uiManager.Register(this);
+            }
+        }
+
+        protected virtual void OnDisable()
+        {
+            // Automatically clean up registration when the window is disabled or unloaded
+            var uiManager = ServiceLocator.Get<UIToolkitUIManager>();
+            if (uiManager != null)
+            {
+                uiManager.Unregister(this);
+            }
         }
 
         public virtual void Open()
@@ -36,7 +56,6 @@ namespace Anarksoft.SharedCore.UI
             IsOpen = true;
             SetDisplayState(true);
             OnWindowOpened?.Invoke(this);
-            
             OnOpened();
         }
 
@@ -47,7 +66,6 @@ namespace Anarksoft.SharedCore.UI
             IsOpen = false;
             SetDisplayState(false);
             OnWindowClosed?.Invoke(this);
-            
             OnClosed();
         }
 
@@ -71,11 +89,9 @@ namespace Anarksoft.SharedCore.UI
                 if (rootElement == null) return;
             }
 
-            // UI Toolkit display toggle
             rootElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
-        // Extension hooks for derived projects (e.g., binding data to elements, starting open/close animations via USS classes)
         protected virtual void OnOpened() { }
         protected virtual void OnClosed() { }
     }
