@@ -47,8 +47,8 @@ namespace Anarksoft.SharedCore.UI
         {
             if (Application.isPlaying)
             {
-                var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
-                uiManager?.Register(this);
+                var uiManager = ServiceLocator.Container.Resolve<UIManager>();
+                uiManager?.RegisterWindow(this);
             }
         }
 
@@ -56,8 +56,8 @@ namespace Anarksoft.SharedCore.UI
         {
             if (Application.isPlaying)
             {
-                var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
-                uiManager?.Unregister(this);
+                var uiManager = ServiceLocator.Container.Resolve<UIManager>();
+                uiManager?.UnregisterWindow(this);
             }
         }
 

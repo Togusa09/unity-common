@@ -46,6 +46,22 @@ namespace Anarksoft.SharedCore.UI
             {
                 window.Close();
             }
+            else
+            {
+                Debug.LogWarning($"[UIManager] Window with ID '{windowID}' not found.");
+            }
+        }
+        
+        public void ToggleWindow(string windowID)
+        {
+            if (registeredWindows.TryGetValue(windowID, out var window))
+            {
+                window.Toggle();
+            }
+            else
+            {
+                Debug.LogWarning($"[UIManager] Window with ID '{windowID}' not found.");
+            }
         }
 
         public void CloseTopWindow()
