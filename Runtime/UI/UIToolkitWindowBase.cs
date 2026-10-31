@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using Anarksoft.SharedCore.DI;
 
 namespace Anarksoft.SharedCore.UI
 {
