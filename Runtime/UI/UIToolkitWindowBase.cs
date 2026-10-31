@@ -1,53 +1,64 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
-using Anarksoft.SharedCore.DI;
 
 namespace Anarksoft.SharedCore.UI
 {
-    [RequireComponent(typeof(UIDocument))]
+    [RequireComponent(typeof(PanelRenderer))]
     public abstract class UIToolkitWindowBase : MonoBehaviour, IUIWindow
     {
         [field: SerializeField] public string WindowID { get; private set; }
         
         public bool IsOpen { get; private set; } = false;
 
-        protected UIDocument uiDocument;
+        protected PanelRenderer panelRenderer;
         protected VisualElement rootElement;
+        private int currentUIVersion = -1;
 
         public event Action<IUIWindow> OnWindowOpened;
         public event Action<IUIWindow> OnWindowClosed;
 
         protected virtual void Awake()
         {
-            uiDocument = GetComponent<UIDocument>();
-            if (uiDocument != null && uiDocument.rootVisualElement != null)
-            {
-                rootElement = uiDocument.rootVisualElement;
-            }
+            panelRenderer = GetComponent<PanelRenderer>();
+            panelRenderer.RegisterUIReloadCallback(OnUIReload);
             
-            CloseInternal(instant: true);
+            // Start closed by default via display style
+            SetDisplayState(false, instant: true);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            if (panelRenderer != null)
+            {
+                panelRenderer.UnregisterUIReloadCallback(OnUIReload);
+            }
         }
 
         protected virtual void OnEnable()
         {
-            // Automatically register with the UIManager when the window becomes active in the scene
-            // (Assuming you have a Service Locator or a static instance accessor)
             var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
-            if (uiManager != null)
-            {
-                uiManager.Register(this);
-            }
+            uiManager?.Register(this);
         }
 
         protected virtual void OnDisable()
         {
-            // Automatically clean up registration when the window is disabled or unloaded
             var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
-            if (uiManager != null)
-            {
-                uiManager.Unregister(this);
-            }
+            uiManager?.Unregister(this);
+        }
+
+        // Triggered natively when PanelRenderer loads or reloads the UXML tree
+        private void OnUIReload(PanelRenderer renderer, VisualElement root, int version)
+        {
+            if (currentUIVersion == version) return;
+            currentUIVersion = version;
+            rootElement = root;
+
+            // Apply initial visibility based on state
+            SetDisplayState(IsOpen, instant: true);
+            
+            // Allow derived windows to bind buttons/elements safely
+            OnUIPrepared(rootElement);
         }
 
         public virtual void Open()
@@ -55,7 +66,7 @@ namespace Anarksoft.SharedCore.UI
             if (IsOpen) return;
 
             IsOpen = true;
-            SetDisplayState(true);
+            SetDisplayState(true, instant: false);
             OnWindowOpened?.Invoke(this);
             OnOpened();
         }
@@ -65,7 +76,7 @@ namespace Anarksoft.SharedCore.UI
             if (!IsOpen) return;
 
             IsOpen = false;
-            SetDisplayState(false);
+            SetDisplayState(false, instant: false);
             OnWindowClosed?.Invoke(this);
             OnClosed();
         }
@@ -76,23 +87,14 @@ namespace Anarksoft.SharedCore.UI
             else Open();
         }
 
-        private void CloseInternal(bool instant)
+        private void SetDisplayState(bool show, bool instant)
         {
-            IsOpen = false;
-            SetDisplayState(false);
-        }
-
-        private void SetDisplayState(bool show)
-        {
-            if (rootElement == null)
-            {
-                if (uiDocument != null) rootElement = uiDocument.rootVisualElement;
-                if (rootElement == null) return;
-            }
-
+            if (rootElement == null) return;
             rootElement.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
+        // Extension hooks for derived window classes
+        protected virtual void OnUIPrepared(VisualElement root) { }
         protected virtual void OnOpened() { }
         protected virtual void OnClosed() { }
     }
