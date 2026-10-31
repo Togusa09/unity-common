@@ -18,6 +18,15 @@ namespace Anarksoft.SharedCore.UI
             }
         }
 
+        public void Unregister<T>(T window) where T : IUIWindow
+        {
+            var type = typeof(T);
+            if (windows.ContainsKey(type))
+            {
+                windows.Remove(type);
+            }
+        }
+
         public void Open<T>() where T : IUIWindow
         {
             if (windows.TryGetValue(typeof(T), out var window))
