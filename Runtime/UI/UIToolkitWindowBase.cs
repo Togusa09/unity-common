@@ -5,11 +5,16 @@ using Anarksoft.SharedCore.DI;
 
 namespace Anarksoft.SharedCore.UI
 {
+    [ExecuteAlways] // Allows the component to run in Edit Mode for previewing
     [RequireComponent(typeof(PanelRenderer))]
     public abstract class UIToolkitWindowBase : MonoBehaviour, IUIWindow
     {
         [field: SerializeField] public string WindowID { get; private set; }
         
+        [Header("Editor Preview")]
+        [Tooltip("Toggle this in the inspector to preview the window open/closed while editing scenes.")]
+        [SerializeField] private bool previewOpenInEditor = false;
+
         public bool IsOpen { get; private set; } = false;
 
         protected PanelRenderer panelRenderer;
@@ -24,8 +29,10 @@ namespace Anarksoft.SharedCore.UI
             panelRenderer = GetComponent<PanelRenderer>();
             panelRenderer.RegisterUIReloadCallback(OnUIReload);
             
-            // Start closed by default via display style
-            SetDisplayState(false, instant: true);
+            if (Application.isPlaying)
+            {
+                SetDisplayState(false, instant: true);
+            }
         }
 
         protected virtual void OnDestroy()
@@ -38,14 +45,41 @@ namespace Anarksoft.SharedCore.UI
 
         protected virtual void OnEnable()
         {
-            var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
-            uiManager?.Register(this);
+            if (Application.isPlaying)
+            {
+                var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
+                uiManager?.Register(this);
+            }
         }
 
         protected virtual void OnDisable()
         {
-            var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
-            uiManager?.Unregister(this);
+            if (Application.isPlaying)
+            {
+                var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
+                uiManager?.Unregister(this);
+            }
+        }
+
+        // Handles updates when tweaking values in the Inspector during Edit Mode
+        protected virtual void OnValidate()
+        {
+            if (!Application.isPlaying)
+            {
+                // If panel renderer isn't cached yet in edit mode, grab it
+                if (panelRenderer == null) panelRenderer = GetComponent<PanelRenderer>();
+                
+                if (rootElement != null)
+                {
+                    SetDisplayState(previewOpenInEditor, instant: true);
+                }
+                // Force display state update based on inspector boolean
+                else if (panelRenderer != null && panelRenderer.visualTreeAsset != null)
+                {
+                    // In edit mode, we can evaluate the root directly if available
+                    // Note: PanelRenderer manages its own visual tree evaluation in edit mode
+                }
+            }
         }
 
         // Triggered natively when PanelRenderer loads or reloads the UXML tree
@@ -56,7 +90,15 @@ namespace Anarksoft.SharedCore.UI
             rootElement = root;
 
             // Apply initial visibility based on state
-            SetDisplayState(IsOpen, instant: true);
+            if (Application.isPlaying)
+            {
+                SetDisplayState(IsOpen, instant: true);
+            }
+            else
+            {
+                // In edit mode, obey the inspector preview toggle
+                SetDisplayState(previewOpenInEditor, instant: true);
+            }
             
             // Allow derived windows to bind buttons/elements safely
             OnUIPrepared(rootElement);
