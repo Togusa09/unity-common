@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
+using Anarksoft.SharedCore.DI;
 
 namespace Anarksoft.SharedCore.UI
 {
@@ -32,7 +33,7 @@ namespace Anarksoft.SharedCore.UI
         {
             // Automatically register with the UIManager when the window becomes active in the scene
             // (Assuming you have a Service Locator or a static instance accessor)
-            var uiManager = ServiceLocator.Get<UIToolkitUIManager>();
+            var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
             if (uiManager != null)
             {
                 uiManager.Register(this);
@@ -42,7 +43,7 @@ namespace Anarksoft.SharedCore.UI
         protected virtual void OnDisable()
         {
             // Automatically clean up registration when the window is disabled or unloaded
-            var uiManager = ServiceLocator.Get<UIToolkitUIManager>();
+            var uiManager = ServiceLocator.Container.Resolve<UIToolkitUIManager>();
             if (uiManager != null)
             {
                 uiManager.Unregister(this);
