@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:VisualElement name="Box" style="flex-grow: 1; justify-content: flex-end; padding: 20px;">
+        <ui:VisualElement name="VBoxContainer" style="background-color: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px;">
+            <ui:Label name="Speaker" text="Speaker Name" style="font-size: 18px; -unity-font-style: bold; margin-bottom: 5px;" />
+            <ui:Label name="Dialogue" text="Dialogue text goes here..." style="font-size: 16px; white-space: normal;" />
+        </ui:VisualElement>
+        <ui:Button name="Continue" text="Continue" style="margin-top: 10px; width: 100px; align-self: flex-end;" />
+    </ui:VisualElement>
+</ui:UXML>
