@@ -40,6 +40,26 @@ namespace Anarksoft.SharedCore.UI
             }
         }
 
+        public T OpenWindow<T>(string windowID) where T : IUIWindow
+        {
+            if (registeredWindows.TryGetValue(windowID, out var window))
+            {
+                if (!(window is T))
+                {
+                    Debug.LogWarning($"[UIManager] Window with ID '{windowID}' is not of type '{typeof(T).Name}'.");
+                    return default;
+                }
+
+                window.Open();
+                return (T)window;
+            }
+            else
+            {
+                Debug.LogWarning($"[UIManager] Window with ID '{windowID}' not found.");
+                return default;
+            }
+        }
+
         public void CloseWindow(string windowID)
         {
             if (registeredWindows.TryGetValue(windowID, out var window))
@@ -61,6 +81,26 @@ namespace Anarksoft.SharedCore.UI
             else
             {
                 Debug.LogWarning($"[UIManager] Window with ID '{windowID}' not found.");
+            }
+        }
+
+        public T ToggleWindow<T>(string windowID) where T : IUIWindow
+        {
+            if (registeredWindows.TryGetValue(windowID, out var window))
+            {
+                if (!(window is T))
+                {
+                    Debug.LogWarning($"[UIManager] Window with ID '{windowID}' is not of type '{typeof(T).Name}'.");
+                    return default;
+                }
+
+                window.Toggle();
+                return (T)window;
+            }
+            else
+            {
+                Debug.LogWarning($"[UIManager] Window with ID '{windowID}' not found.");
+                return default;
             }
         }
 
