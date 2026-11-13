@@ -1,14 +1,16 @@
-    using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Anarksoft.SharedCore.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Anarks2.UnityCommon.Gameplay.Dialog
 {   
-    public class DialogueWindowController : MonoBehaviour
+    public class DialogueWindowController : UIToolkitWindowBase
     {
         private VisualElement _root;
         private Label _speakerLabel;
@@ -24,10 +26,9 @@ namespace Anarks2.UnityCommon.Gameplay.Dialog
 
         private CancellationTokenSource _typingCancellationTokenSource;
 
-        private void Awake()
+        protected override void OnUIPrepared(VisualElement root)
         {
-            var uiDocument = GetComponent<UIDocument>();
-            _root = uiDocument.rootVisualElement;
+            _root = root;
 
             // Query elements based on names given in UXML
             _speakerLabel = _root.Q<Label>("Speaker");
@@ -35,16 +36,16 @@ namespace Anarks2.UnityCommon.Gameplay.Dialog
             _continueButton = _root.Q<Button>("Continue");
 
             _continueButton.clicked += OnContinuePressed;
-            Close();
+            OnClose();
         }
 
-        public void Open()
+        public void OnOpen()
         {
             _root.style.display = DisplayStyle.Flex;
             _continueButton.Focus();
         }
 
-        public void Close()
+        public void OnClose()
         {
             CancelTyping();
             _root.style.display = DisplayStyle.None;
@@ -55,12 +56,12 @@ namespace Anarks2.UnityCommon.Gameplay.Dialog
             DisplayMultiline(new List<string> { line }, speaker);
         }
 
-        public void DisplayMultiline(List<string> lines, string speaker = "")
+        public void DisplayMultiline(ICollection<string> lines, string speaker = "")
         {
-            _lines = lines;
+            _lines = lines.ToList();
             _speakerName = speaker;
             _currentLine = 0;
-            Open();
+            OnOpen();
             _ = _NextLineAsync(); // Fire and forget standard async method
         }
 
@@ -116,7 +117,7 @@ namespace Anarks2.UnityCommon.Gameplay.Dialog
 
         private void OnContinuePressed()
         {
-            if (_typingCancellationTokenSource != null && !_typingCancellationTokenSource.IsCancellationRequested)
+            if (_dialogueLabel.text.Length < _lines[_currentLine].Length && _typingCancellationTokenSource != null && !_typingCancellationTokenSource.IsCancellationRequested)
             {
                 // Skip typing animation: cancel current typewriter task and display full text instantly
                 CancelTyping();
