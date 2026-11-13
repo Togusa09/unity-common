@@ -1,5 +1,6 @@
     using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -85,6 +86,8 @@ namespace Anarks2.UnityCommon.Gameplay.Dialog
             }
         }
 
+       private StringBuilder _stringBuilder = new StringBuilder(256); // Pre-allocate capacity to avoid internal resizing
+
         private async Task TypeTextRoutineAsync(string targetText, CancellationToken cancellationToken)
         {
             int totalChars = targetText.Length;
@@ -97,11 +100,13 @@ namespace Anarks2.UnityCommon.Gameplay.Dialog
                 currentChars += _typingSpeed * Time.deltaTime;
                 int charsToShow = Mathf.Clamp(Mathf.FloorToInt(currentChars), 0, totalChars);
                 
-                _dialogueLabel.text = targetText.Substring(0, charsToShow);
+                // Build the visible portion without creating intermediate string garbage
+                _stringBuilder.Clear();
+                _stringBuilder.Append(targetText, 0, charsToShow);
+                _dialogueLabel.text = _stringBuilder.ToString();
 
                 if (charsToShow >= totalChars) break;
 
-                // Yield control back to Unity's main thread loop for the next frame
                 await Task.Yield();
             }
 
