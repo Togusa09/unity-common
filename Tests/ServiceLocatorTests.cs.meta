@@ -1,23 +1,2 @@
 fileFormatVersion: 2
-guid: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
-MonoImporter:
-  externalObjects: {}
-  serializedVersion: 2
-  defaultReferences: []
-  materials: []
-  animations: []
-  sprites: []
-  polygonColliders: []
-  animationClips: []
-  animationCurves: []
-  closedCurves: []
-  motionCurves: []
-  rangeCurves: []
-  clerp:
-  - curve: {fileID: 0}
-    loops: 0
-  - curve: {fileID: 0}
-    loops: 0
-  userData: 
-  assetBundleName: 
-  assetBundleVariant: 
+guid: 88f2281f34e21df4c972562ff47bd4ec
