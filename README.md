@@ -60,3 +60,16 @@ Use this approach if you are building a game project that only needs to *consume
 * **`Runtime/`**: Gameplay logic, core systems, and components (Assembly: `com.anarks2.unity-common`)
 * **`Editor/`**: Custom editor windows and tooling (Assembly: `com.anarks2.unity-common.editor`)
 * **`Tests/`**: Automated EditMode and PlayMode NUnit test suites (Assembly: `com.anarks2.unity-common.tests`)
+  * **ServiceLocatorTests.cs** - Comprehensive tests for the ServiceLocator dependency injection container
+
+## Running Tests
+
+### In Unity Editor
+1. Open the project in Unity
+2. Go to **Window > General > Test Runner**
+3. Select the **EditMode** tab
+4. Tests under **Anarksoft.SharedCore.Tests** should be visible
+5. Click **Run All** to execute all tests
+
+### Current Test Coverage
+- **ServiceLocator Tests** - Full suite covering singleton pattern, service registration/resolution, exception handling, and container reset
