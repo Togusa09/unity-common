@@ -36,16 +36,16 @@ namespace Anarks2.UnityCommon.Gameplay.Dialog
             _continueButton = _root.Q<Button>("Continue");
 
             _continueButton.clicked += OnContinuePressed;
-            OnClose();
+            OnClosed();
         }
 
-        public void OnOpen()
+        protected override void OnOpened()
         {
             _root.style.display = DisplayStyle.Flex;
             _continueButton.Focus();
         }
 
-        public void OnClose()
+        protected override void OnClosed()
         {
             CancelTyping();
             _root.style.display = DisplayStyle.None;
@@ -61,7 +61,7 @@ namespace Anarks2.UnityCommon.Gameplay.Dialog
             _lines = lines.ToList();
             _speakerName = speaker;
             _currentLine = 0;
-            OnOpen();
+            OnOpened();
             _ = _NextLineAsync(); // Fire and forget standard async method
         }
 
