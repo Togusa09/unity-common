@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Anarksoft.SharedCore.UI
 {
-    public class UIManager : MonoBehaviour
+    public class UIManager
     {
         private readonly Dictionary<string, IUIWindow> registeredWindows = new Dictionary<string, IUIWindow>();
         private readonly Stack<IUIWindow> openWindowsStack = new Stack<IUIWindow>();
